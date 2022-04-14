@@ -1,5 +1,6 @@
 import { Component, OnInit, VERSION } from '@angular/core';
 import {of, from, tap, map, take} from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'my-app',
@@ -38,6 +39,23 @@ export class AppComponent   implements OnInit{
     //   complete: () => console.log(`Process Complete! No more Apples to pick!`),
     // });
 
+    of(2, 4, 6, 8).pipe(
+      map(i => {
+        if (i === 6) {
+          throw 'Error!';          
+        }
+        return i;
+      }), catchError(err => of('six'))
+    )
+    .subscribe({
+      next: x=> console.log(x),
+      error: err => console.log(err)
+    });
 
   }
+
+  ngOnDestroy() {
+    console.log("This method is called when ngOnDetroy is initiated");
+  }
+
 }
